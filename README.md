@@ -3,7 +3,7 @@
 AI-powered doctors in your browser – real-time health assistance with voice.  
 
 ## 🚀 Live Demo  
-👉 [AI Medical Voice Agent](https://medi-voice-ai-lake.vercel.app/)  
+👉 [AI Medical Voice Agent](https://med-ai-dun-one.vercel.app/)  
 
 ## ✨ Features  
 - 🎙️ Real-time voice interaction (AssemblyAI)  
