@@ -71,7 +71,7 @@ export default function Home() {
             }}
             className="relative z-10 mt-8 flex flex-wrap items-center justify-center gap-4"
           >
-            <button className="w-60 transform rounded-lg bg-black px-6 py-2 font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:cursor-pointer hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200">
+            <button className="px-6 py-2 bg-black text-white rounded-lg font-bold transform hover:-translate-y-1 transition duration-400">
               Get Started
             </button>
           </motion.div>
@@ -115,6 +115,7 @@ const Navbar = () => {
         <div />
         <Image
           src={"/logo.png"}
+          onClick={() => window.location.replace("/")}
           alt=""
           width={200}
           height={150}

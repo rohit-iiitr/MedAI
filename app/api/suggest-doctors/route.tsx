@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const completion = await openai.chat.completions.create({
-      model: "deepseek/deepseek-r1-0528-qwen3-8b:free",
+      model: "deepseek/deepseek-v3.2",
       messages: [
         { role: "system", content: JSON.stringify(AIDoctorAgents) },
         {
@@ -20,13 +20,35 @@ export async function POST(req: NextRequest) {
       ],
     });
 
-    const rawResp = completion.choices[0].message;
-    //@ts-ignore
-    const Resp = rawResp.content
-      .trim()
-      .replace("```json", "")
-      .replace("```", "");
-    const parsed = JSON.parse(Resp);
+    const rawContent = completion.choices[0].message?.content;
+
+    if (!rawContent) {
+      return NextResponse.json(
+        { error: "No response from AI model" },
+        { status: 500 }
+      );
+    }
+
+    // Strip DeepSeek R1 <think>...</think> reasoning tags
+    let cleaned = rawContent.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
+
+    // Strip markdown code fences
+    cleaned = cleaned
+      .replace(/```json\s*/g, "")
+      .replace(/```\s*/g, "")
+      .trim();
+
+    // Extract JSON array robustly
+    const jsonMatch = cleaned.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) {
+      console.error("Failed to extract JSON array from response:", cleaned);
+      return NextResponse.json(
+        { error: "Invalid response format from AI model" },
+        { status: 500 }
+      );
+    }
+
+    const parsed = JSON.parse(jsonMatch[0]);
 
     // 🔧 Enrich missing fields using full list
     const enriched = parsed.map((partialDoctor: any) => {
